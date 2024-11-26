@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block Placement Game</title>
+    <style>
+        /* Basic Styling */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .block-selection {
+            margin-bottom: 20px;
+        }
+
+        .block, .eraser {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .block:hover, .eraser:hover {
+            background-color: #2980b9;
+        }
+
+        .eraser {
+            background-color: #e74c3c;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 50px);
+            grid-template-rows: repeat(10, 50px);
+            gap: 2px;
+            margin: 20px auto;
+            width: 510px;
+            height: 510px;
+            border: 2px solid #333;
+        }
+
+        /* Grid Cells */
+        .grid .cell {
+            width: 50px;
+            height: 50px;
+            background-color: #ddd;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        /* Active Block Styling */
+        .block1 { background-color: red; }
+        .block2 { background-color: green; }
+        .block3 { background-color: blue; }
+        .block4 { background-color: yellow; }
+        .block5 { background-color: purple; }
+        .block6 { background-color: orange; }
+        .block7 { background-color: pink; }
+        .block8 { background-color: cyan; }
+        .block9 { background-color: lime; }
+    </style>
+</head>
+<body>
+    <h1>Block Placement Game</h1>
+    <p>Press 1-9 to select a block, or use the Eraser to remove a block. Click on the grid to place it.</p>
+    
+    <!-- Block Selection Area -->
+    <div class="block-selection">
+        <button class="block" id="block1">Red Block</button>
+        <button class="block" id="block2">Green Block</button>
+        <button class="block" id="block3">Blue Block</button>
+        <button class="block" id="block4">Yellow Block</button>
+        <button class="block" id="block5">Purple Block</button>
+        <button class="block" id="block6">Orange Block</button>
+        <button class="block" id="block7">Pink Block</button>
+        <button class="block" id="block8">Cyan Block</button>
+        <button class="block" id="block9">Lime Block</button>
+        <button class="eraser" id="eraser">Eraser</button>
+    </div>
+
+    <!-- Grid Area -->
+    <div class="grid" id="grid"></div>
+
+    <script>
+        // Game state
+        let selectedBlock = null;
+        let isEraserActive = false;
+
+        // Block colors for easier selection
+        const blockColors = {
+            block1: 'red',
+            block2: 'green',
+            block3: 'blue',
+            block4: 'yellow',
+            block5: 'purple',
+            block6: 'orange',
+            block7: 'pink',
+            block8: 'cyan',
+            block9: 'lime'
+        };
+
+        // Default grid color
+        const defaultColor = '#ddd';
+
+        // Create a 10x10 grid dynamically
+        const grid = document.getElementById('grid');
+        for (let i = 0; i < 100; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            grid.appendChild(cell);
+
+            // Add click event to place blocks
+            cell.addEventListener('click', function () {
+                if (isEraserActive) {
+                    cell.style.backgroundColor = defaultColor; // Erase the cell
+                } else if (selectedBlock) {
+                    cell.style.backgroundColor = selectedBlock; // Place the block
+                }
+            });
+        }
+
+        // Handle block selection with mouse clicks
+        const blocks = document.querySelectorAll('.block');
+        blocks.forEach(block => {
+            block.addEventListener('click', function () {
+                selectedBlock = blockColors[block.id]; // Set selected block color
+                isEraserActive = false; // Disable eraser when selecting a block
+                highlightSelectedBlock(block);
+            });
+        });
+
+        // Handle eraser activation
+        const eraser = document.getElementById('eraser');
+        eraser.addEventListener('click', function () {
+            isEraserActive = true; // Enable eraser
+            selectedBlock = null; // Disable block placement
+            highlightSelectedBlock(eraser);
+        });
+
+        // Handle key press for block selection
+        document.addEventListener('keydown', function (e) {
+            if (e.key >= '1' && e.key <= '9') {
+                const blockId = 'block' + e.key;
+                selectedBlock = blockColors[blockId];
+                isEraserActive = false; // Disable eraser when selecting a block
+                highlightSelectedBlock(document.getElementById(blockId));
+            }
+            if (e.key === 'e' || e.key === 'E') {
+                isEraserActive = true; // Enable eraser
+                selectedBlock = null; // Disable block placement
+                highlightSelectedBlock(eraser);
+            }
+        });
+
+        // Function to highlight the selected block or eraser
+        function highlightSelectedBlock(activeButton) {
+            blocks.forEach(b => b.style.backgroundColor = ''); // Reset all blocks
+            const eraserButton = document.getElementById('eraser');
+            eraserButton.style.backgroundColor = ''; // Reset eraser button color
+            activeButton.style.backgroundColor = '#2980b9'; // Highlight selected block or eraser
+        }
+    </script>
+</body>
+</html>
